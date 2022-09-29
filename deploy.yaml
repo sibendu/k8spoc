@@ -19,7 +19,7 @@ spec:
             - containerPort: 8080
           env:
             - name: DB_HOST
-              value: 'localhost'
+              value: '172.31.1.0'
             - name: DB_PORT
               value: '32017'		
           imagePullPolicy: Always
@@ -58,7 +58,7 @@ spec:
             - containerPort: 8080
           env:
             - name: DB_HOST
-              value: 'localhost'
+              value: '172.31.1.0'
             - name: DB_PORT
               value: '32017'
           imagePullPolicy: Always
