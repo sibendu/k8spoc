@@ -17,6 +17,11 @@ spec:
           image: sibendu/service1
           ports:
             - containerPort: 8080
+          env:
+            - name: DB_HOST
+              value: 'localhost'
+            - name: DB_PORT
+              value: '32017'		
           imagePullPolicy: Always
 ---
 apiVersion: v1
@@ -50,6 +55,11 @@ spec:
           image: sibendu/service2
           ports:
             - containerPort: 8080
+          env:
+            - name: DB_HOST
+              value: 'localhost'
+            - name: DB_PORT
+              value: '32017'
           imagePullPolicy: Always
 ---
 apiVersion: v1
