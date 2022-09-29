@@ -24,11 +24,11 @@ public class CustomerService {
 	
 	@GetMapping("/seed")
 	public String seed() {
-		
+				
 		System.out.println("Data creation started...");
-		
-		Customer c1 = new Customer("johnd", "John", "Doe");
-		customerRepository.save(c1);
+
+		Customer c2 = new Customer("bellac", "Bella", "Curtis");
+		customerRepository.save(c2);
 
 		String msg = "Populated seed data successfully!";
 		System.out.println("Data creation complete...");
