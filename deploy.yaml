@@ -37,9 +37,10 @@ spec:
       targetPort: 8080
       nodePort: 31080
 ---     
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: service1
+  name: service2
 spec:
   replicas: 1
   selector:
