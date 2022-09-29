@@ -43,7 +43,6 @@ public class CustomerService {
 	
 	@GetMapping("/clean")
 	public String clean() {		
-		groceryItemRepo.deleteAll();
 		customerRepository.deleteAll();
 		String msg = "Cleaned seed data successfully!";
 		System.out.println(msg);
