@@ -1,6 +1,7 @@
 package com.demo;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -56,82 +57,12 @@ public class CustomerService {
 		return StaticCredentialsProvider.create(awsCredentials);
 	}
 	
-	public String getShardIterator(KinesisClient kinesis) {
-		String shardIterator;
-        String lastShardId = null;
-
-        DescribeStreamRequest describeStreamRequest = DescribeStreamRequest.builder()
-            .streamName(streamName)
-            .build();
-
-        List<Shard> shards = new ArrayList<>();
-        DescribeStreamResponse streamRes;
-        do {
-            streamRes = kinesis.describeStream(describeStreamRequest);
-            shards.addAll(streamRes.streamDescription().shards());
-
-            if (shards.size() > 0) {
-                lastShardId = shards.get(shards.size() - 1).shardId();
-            }
-        } while (streamRes.streamDescription().hasMoreShards());
-
-        GetShardIteratorRequest itReq = GetShardIteratorRequest.builder()
-            .streamName(streamName)
-            .shardIteratorType("TRIM_HORIZON")
-            .shardId(lastShardId)
-            .build();
-
-        GetShardIteratorResponse shardIteratorResult = kinesis.getShardIterator(itReq);
-        shardIterator = shardIteratorResult.shardIterator();
-        System.out.println("Got shards for stream "+streamName);
-        return shardIterator;
-	}
-	
-	@GetMapping("/consume")
-	public List<String> consume() {
-
-		System.out.println("Consuming from Kinesis Stream started...");
-		
-		KinesisClient kinesis = KinesisClient.builder().region(Region.EU_WEST_1)
-				.credentialsProvider(getAWSCredential()).build();
-		System.out.println(kinesis);
-		
-		if(this.nextShardIterator == null) {
-			this.nextShardIterator = getShardIterator(kinesis);
-		}else {
-			System.out.println("Messages read before, staring from: "+this.nextShardIterator);
-		}
-		
-		GetRecordsRequest recordsRequest = GetRecordsRequest.builder()
-				.shardIterator(this.nextShardIterator)
-	            .limit(2)
-	            .build();
-		
-		GetRecordsResponse result = kinesis.getRecords(recordsRequest);
-		
-		this.nextShardIterator = result.nextShardIterator();
-		
-		List<Record> records = result.records();
-		List<String> results = new ArrayList();
-        for (Iterator iterator = records.iterator(); iterator.hasNext();) {
-			Record record = (Record) iterator.next();
-			String msg = new String(record.data().asByteArray());
-			System.out.println(record.sequenceNumber() + "  ::  "+ msg);
-			results.add(msg);
-		}
-        
-		String msg = "Received from stream "+streamName+" : "+records.size();
-		System.out.println(msg);
-
-		return results;
-	}
-	
 	@GetMapping("/publish")
 	public String publish() {
 
 		System.out.println("Publishing to Kinesis Stream started...");
 
-		String recordData = "Message published @ "+System.currentTimeMillis();
+		String recordData = "Message published at "+new Date();
 
 		KinesisClient kinesis = KinesisClient.builder().region(Region.EU_WEST_1)
 				.credentialsProvider(getAWSCredential()).build();
@@ -147,18 +78,17 @@ public class CustomerService {
 		PutRecordResponse recordResponse = kinesis.putRecord(recordRequest);
 		kinesis.close();
 
-		String msg = "Message published to stream "+streamName;
+		String msg = "Published to "+streamName+ ", Message is: " +recordData;
 		System.out.println(msg);
 
 		return msg;
 	}
 
-	
 
 	@GetMapping("/seed")
 	public String seed() {
 
-		System.out.println("Data creation started...");
+		System.out.println("Data seeding started...");
 
 		Customer c1 = new Customer("johnd", "John", "Doe");
 		customerRepository.save(c1);
