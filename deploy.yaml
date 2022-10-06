@@ -4,8 +4,8 @@ metadata:
   name: mongocfg
 data:
   # property-like keys; each key maps to a simple value
-  DB_HOST: "172.31.1.0"
-  DB_PORT: "32017"  
+  DB_HOST: "mongo-nodeport-svc"
+  DB_PORT: "27017"  
 ---
 apiVersion: apps/v1
 kind: Deployment
