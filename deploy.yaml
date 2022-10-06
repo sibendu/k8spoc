@@ -5,7 +5,12 @@ metadata:
 data:
   # property-like keys; each key maps to a simple value
   DB_HOST: "mongo-nodeport-svc"
-  DB_PORT: "27017"  
+  DB_PORT: "27017"
+  DB_NAME: "test"
+  AWS_ACCESS_KEY: "<access key>"
+  AWS_SECRET: "<secret>"
+  KINESIS_STREAM_NAME: "poc-stream"
+  KINESIS_PARTITION_KEY: "poc-partition-key"  
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -37,6 +42,31 @@ spec:
                 configMapKeyRef:
                   name: mongocfg
                   key: DB_PORT              		
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: mongocfg
+                  key: DB_NAME              		
+            - name: AWS_ACCESS_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: mongocfg
+                  key: AWS_ACCESS_KEY              		
+            - name: AWS_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: mongocfg
+                  key: AWS_SECRET              		
+            - name: KINESIS_STREAM_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: mongocfg
+                  key: KINESIS_STREAM_NAME              		
+            - name: KINESIS_PARTITION_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: mongocfg
+                  key: KINESIS_PARTITION_KEY
           imagePullPolicy: Always
 ---
 apiVersion: v1
@@ -96,3 +126,4 @@ spec:
     - port: 8080
       targetPort: 8080
       nodePort: 31081
+
