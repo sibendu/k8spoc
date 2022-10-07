@@ -47,8 +47,6 @@ public class CustomerService {
 	@Value("${aws.secret.key}")
 	private String secretKey;
 	
-	String nextShardIterator;
-
 	@Autowired
 	CustomerRepository customerRepository;
 	
@@ -56,6 +54,71 @@ public class CustomerService {
 		AwsBasicCredentials awsCredentials = AwsBasicCredentials.create(accessKey, secretKey);
 		return StaticCredentialsProvider.create(awsCredentials);
 	}
+	
+	public String getShardIterator(KinesisClient kinesis) {
+		String shardIterator;
+        String lastShardId = null;
+
+        DescribeStreamRequest describeStreamRequest = DescribeStreamRequest.builder()
+            .streamName(streamName)
+            .build();
+
+        List<Shard> shards = new ArrayList<>();
+        DescribeStreamResponse streamRes;
+        do {
+            streamRes = kinesis.describeStream(describeStreamRequest);
+            shards.addAll(streamRes.streamDescription().shards());
+
+            if (shards.size() > 0) {
+                lastShardId = shards.get(shards.size() - 1).shardId();
+            }
+        } while (streamRes.streamDescription().hasMoreShards());
+
+        GetShardIteratorRequest itReq = GetShardIteratorRequest.builder()
+            .streamName(streamName)
+            .shardIteratorType("TRIM_HORIZON")
+            .shardId(lastShardId)
+            .build();
+
+        GetShardIteratorResponse shardIteratorResult = kinesis.getShardIterator(itReq);
+        shardIterator = shardIteratorResult.shardIterator();
+        System.out.println("Got shards for stream "+streamName);
+        return shardIterator;
+	}
+	
+	@GetMapping("/consume")
+	public List<String> consume() {
+
+		System.out.println("Consuming from Kinesis Stream started...");
+		
+		KinesisClient kinesis = KinesisClient.builder().region(Region.EU_WEST_1)
+				.credentialsProvider(getAWSCredential()).build();
+		System.out.println(kinesis);
+		
+		String shardIterator = getShardIterator(kinesis);
+		
+		GetRecordsRequest recordsRequest = GetRecordsRequest.builder()
+				.shardIterator(shardIterator)
+	            .limit(1000)
+	            .build();
+		
+		GetRecordsResponse result = kinesis.getRecords(recordsRequest);
+		
+		List<Record> records = result.records();
+		List<String> results = new ArrayList();
+        for (Iterator iterator = records.iterator(); iterator.hasNext();) {
+			Record record = (Record) iterator.next();
+			String msg = new String(record.data().asByteArray());
+			System.out.println(record.sequenceNumber() + "  ::  "+ msg);
+			results.add(msg);
+		}
+        
+		String msg = "Received from stream "+streamName+" : "+records.size();
+		System.out.println(msg);
+
+		return results;
+	}
+
 	
 	@GetMapping("/publish")
 	public String publish() {

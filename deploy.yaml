@@ -4,7 +4,7 @@ metadata:
   name: mongocfg
 data:
   # property-like keys; each key maps to a simple value
-  DB_HOST: "mongo-nodeport-svc"
+  DB_HOST: "172.31.20.55"
   DB_PORT: "27017"
   DB_NAME: "test"
   AWS_ACCESS_KEY: "<access key>"
