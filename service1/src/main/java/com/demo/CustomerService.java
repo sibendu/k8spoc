@@ -50,6 +50,10 @@ public class CustomerService {
 	@Autowired
 	CustomerRepository customerRepository;
 	
+	@Autowired
+	CustomerRepositoryV2 customerRepositoryV2;
+	
+	
 	public AwsCredentialsProvider getAWSCredential() {
 		AwsBasicCredentials awsCredentials = AwsBasicCredentials.create(accessKey, secretKey);
 		return StaticCredentialsProvider.create(awsCredentials);
@@ -153,8 +157,11 @@ public class CustomerService {
 
 		System.out.println("Data seeding started...");
 
-		Customer c1 = new Customer("johnd", "John", "Doe");
+		Customer c1 = new Customer("johnd", "John", "Doe", "Jr.");
 		customerRepository.save(c1);
+
+		CustomerV2 c2 = new CustomerV2("amitra", "Amlan", "Mitra", new Integer(45));
+		customerRepositoryV2.save(c2);
 
 		String msg = "Populated seed data successfully!";
 		System.out.println("Data creation complete...");
@@ -174,7 +181,14 @@ public class CustomerService {
 	@GetMapping("/find")
 	public List<Customer> find() {
 		// return groceryItemRepo.findAll();
-		return customerRepository.findAll();
+		List<Customer>  customers = customerRepository.findAll();
+		
+		for (Iterator iterator = customers.iterator(); iterator.hasNext();) {
+			Customer c = (Customer) iterator.next();
+			System.out.println("Customer record: "+c.getFirstName()+" , " + c.getLastName()+ " , "+c.getMiddleName());
+		}
+		
+		return customers;
 	}
 
 	@GetMapping("/find/{id}")

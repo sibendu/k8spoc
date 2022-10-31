@@ -5,31 +5,31 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document("customer")
-public class Customer {
+public class CustomerV2 {
 
 	@Id
     private String id;
     private String firstName;
     private String lastName;
-    private String middleName;
+    private Integer age;
     
 //    public Customer() {	
 //    }
 
-	public Customer(String id, String firstName, String lastName, String middleName) {
+	public CustomerV2(String id, String firstName, String lastName, Integer age) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.middleName=middleName;
+		this.age= age;
 	}
 	
-	public String getMiddleName() {
-		return middleName;
+	public Integer getAge() {
+		return age;
 	}
 
-	public void setMiddleName(String middleName) {
-		this.middleName = middleName;
+	public void setAge(Integer age) {
+		this.age = age;
 	}
 
 	public String getId() {
