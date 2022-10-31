@@ -13,8 +13,18 @@ public class CustomerV2 {
     private String lastName;
     private Integer age;
     
+    private String tag;
+    
 //    public Customer() {	
 //    }
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
 
 	public CustomerV2(String id, String firstName, String lastName, Integer age) {
 		super();
@@ -22,6 +32,8 @@ public class CustomerV2 {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.age= age;
+		
+		this.tag = "v2"; 
 	}
 	
 	public Integer getAge() {

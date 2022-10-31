@@ -1,5 +1,7 @@
 package com.demo;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -13,8 +15,18 @@ public class Customer {
     private String lastName;
     private String middleName;
     
+    private String tag;
+    
 //    public Customer() {	
 //    }
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
 
 	public Customer(String id, String firstName, String lastName, String middleName) {
 		super();
@@ -22,6 +34,8 @@ public class Customer {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.middleName=middleName;
+		
+		this.tag = "v1";
 	}
 	
 	public String getMiddleName() {

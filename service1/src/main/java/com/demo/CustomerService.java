@@ -190,6 +190,19 @@ public class CustomerService {
 		
 		return customers;
 	}
+	
+	@GetMapping("/find/v1")
+	public List<Customer> findV1() {
+
+		List<Customer>  customers = customerRepository.findByTag("v1");
+		
+		for (Iterator iterator = customers.iterator(); iterator.hasNext();) {
+			Customer c = (Customer) iterator.next();
+			System.out.println("Customer record: "+c.getFirstName()+" , " + c.getLastName()+ " , "+c.getMiddleName());
+		}
+		
+		return customers;
+	}
 
 	@GetMapping("/find/{id}")
 	public Customer find(@PathVariable String id) {
