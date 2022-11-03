@@ -9,4 +9,5 @@ public interface CustomerRepositoryV2 extends MongoRepository<CustomerV2, String
 
 	List<CustomerV2> findByFirstName(String firstName);
 
+	List<CustomerV2> findByFirstNameAndTag(String firstName, String tag);
 }

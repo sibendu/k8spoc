@@ -178,7 +178,8 @@ public class CustomerService {
 		return msg;
 	}
 
-	@GetMapping("/find")
+	//Find all records using V1 code (Customer object as it was during earlier version)
+	@GetMapping("/findv1")
 	public List<Customer> find() {
 		// return groceryItemRepo.findAll();
 		List<Customer>  customers = customerRepository.findAll();
@@ -191,10 +192,25 @@ public class CustomerService {
 		return customers;
 	}
 	
-	@GetMapping("/find/v1")
-	public List<Customer> findV1() {
+	//Find all records using V2 code (Customer object as it is in most recent version)
+	@GetMapping("/findv2")
+	public List<CustomerV2> findV2() {
+		// return groceryItemRepo.findAll();
+		List<CustomerV2>  customers = customerRepositoryV2.findAll();
+		
+		for (Iterator iterator = customers.iterator(); iterator.hasNext();) {
+			CustomerV2 c = (CustomerV2) iterator.next();
+			System.out.println("Customer record: "+c.getFirstName()+" , " + c.getLastName()+ " , "+c.getAge());
+		}
+		
+		return customers;
+	}
+	
+	//Find method for records with a particular tag
+	@GetMapping("/findbytag/{tag}")
+	public List<Customer> findByTag(@PathVariable String tag) {
 
-		List<Customer>  customers = customerRepository.findByTag("v1");
+		List<Customer> customers = customerRepository.findByTag(tag);
 		
 		for (Iterator iterator = customers.iterator(); iterator.hasNext();) {
 			Customer c = (Customer) iterator.next();
@@ -204,14 +220,37 @@ public class CustomerService {
 		return customers;
 	}
 
+	//Find method with First Name and tag (using recent version of Customer object)
+	@GetMapping("/findbyfirstname/{firstName}/{tag}")
+	public List<CustomerV2> findByFirstNameAndTag(@PathVariable String firstName, @PathVariable String tag) {
+
+		List<CustomerV2> customers = customerRepositoryV2.findByFirstNameAndTag(firstName, tag);
+		
+		for (Iterator iterator = customers.iterator(); iterator.hasNext();) {
+			CustomerV2 c = (CustomerV2) iterator.next();
+			System.out.println("Customer record: "+c.getFirstName()+" , " + c.getLastName()+ " , "+c.getAge());
+		}
+		
+		return customers;
+	}
+	
+	//Find method with Middle Name and tag (using initial/older version of Customer object)
+	@GetMapping("/findbymiddlename/{middleName}/{tag}")
+	public List<Customer> findByMiddleNameAndTag(@PathVariable String middleName, @PathVariable String tag) {
+
+		List<Customer> customers = customerRepository.findByMiddleNameAndTag(middleName, tag);
+		
+		for (Iterator iterator = customers.iterator(); iterator.hasNext();) {
+			Customer c = (Customer) iterator.next();
+			System.out.println("Customer record: "+c.getFirstName()+" , " + c.getLastName()+ " , "+c.getMiddleName());
+		}
+		
+		return customers;
+	}
+	
 	@GetMapping("/find/{id}")
 	public Customer find(@PathVariable String id) {
 		return customerRepository.findById(id).get();
-	}
-
-	@GetMapping("/find/name/{firstName}")
-	public List<Customer> findName(@PathVariable String firstName) {
-		return customerRepository.findByFirstName(firstName);
 	}
 
 }
