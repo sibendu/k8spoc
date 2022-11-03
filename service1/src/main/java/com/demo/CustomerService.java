@@ -220,7 +220,7 @@ public class CustomerService {
 		return customers;
 	}
 
-	//Find method with First Name and tag (using recent version of Customer object)
+	//Find method by First Name and tag (using recent version of Customer object)
 	@GetMapping("/findbyfirstname/{firstName}/{tag}")
 	public List<CustomerV2> findByFirstNameAndTag(@PathVariable String firstName, @PathVariable String tag) {
 
@@ -234,7 +234,7 @@ public class CustomerService {
 		return customers;
 	}
 	
-	//Find method with Middle Name and tag (using initial/older version of Customer object)
+	//Find method by Middle Name and tag (using initial/older version of Customer object)
 	@GetMapping("/findbymiddlename/{middleName}/{tag}")
 	public List<Customer> findByMiddleNameAndTag(@PathVariable String middleName, @PathVariable String tag) {
 
