@@ -4,7 +4,7 @@ RUN apt-get update && \
   apt-get upgrade -y && \
   apt-get install -q -y openjdk-8-jdk
 
-RUN java -version
+#RUN java -version
 
 ENV S3_URL=https://bouncycastle.s3.ap-south-1.amazonaws.com
 ENV JDK_HOME=/usr/lib/jvm/java-8-openjdk-amd64
