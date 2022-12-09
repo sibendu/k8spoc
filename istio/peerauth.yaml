@@ -1,0 +1,23 @@
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: serviceb
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: serviceb
+  mtls:
+    mode: STRICT
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: serviceb-bozo
+  namespace: bozo-book-library-dev
+spec:
+  selector:
+    matchLabels:
+      app: serviceb
+  mtls:
+    mode: STRICT
