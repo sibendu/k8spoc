@@ -7,11 +7,14 @@ spec:
     istio: ingress # use istio default controller
   servers:
   - port:
-      number: 80
-      name: http
-      protocol: HTTP
+      number: 443
+      name: https
+      protocol: HTTPS
+    tls:
+      mode: SIMPLE
+      credentialName: servicea-credential
     hosts:
-    - "*"	
+    - "servicea.example.com"	
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -19,7 +22,7 @@ metadata:
   name: servicea
 spec:
   hosts:
-  - "*"
+  - "servicea.example.com"
   gateways:
   - test-gateway
   http:
